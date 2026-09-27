@@ -1,0 +1,14 @@
+{
+  "name": "meal-optimizer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Automatyczny wybor posilkow w cateringach dietetycznych (Maczfit, Kuchnia Vikinga, Zdrowy Catering) pod wlasny profil zdrowotny, wybor robi AI",
+  "main": "optimize.js",
+  "scripts": {
+    "start": "node optimize.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "groq-sdk": "^1.6.0"
+  }
+}
