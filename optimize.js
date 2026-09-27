@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-// Użycie: node optimize.js <provider> [dateFrom] [dateTo] [--apply] [--replan] [--show-prompt] [--order=ID|all] [--profile=nazwa]
+// Użycie: node optimize.js <provider> [dateFrom] [dateTo] [--apply] [--replan] [--show-prompt] [--order=ID|all] [--profile=nazwa] [--env=plik]
 //   provider dietly dodatkowo: --company=<company-id> [--host=panel.dietly.pl]
 //   bez --apply: podgląd, wybory AI trafiają do plans/<provider>.json
 //   --apply:     odtwarza plan z pliku dla tego samego zakresu (bez pytania AI), pomija sloty zmienione ręcznie w międzyczasie
 //   --replan:    przy --apply pyta AI od nowa zamiast czytać plan
-require('dotenv').config();
+// --env=plik pozwala trzymać kilka konfiguracji (np. dwa zamówienia na jednym koncie), domyślnie .env
+const envFlag = process.argv.find((a) => a.startsWith('--env='));
+require('dotenv').config(envFlag ? { path: envFlag.slice(6) } : {});
 const { parseArgs } = require('./lib/cli');
 const { loadProvider, providerNames } = require('./providers');
 const { createPicker } = require('./lib/ai');
@@ -142,7 +144,7 @@ async function main() {
 
   if (!APPLY) {
     const file = savePlan(providerName, planMeta, planned);
-    console.log(`Plan zapisany do ${file}. Zapis: node optimize.js ${providerName} ${dateFrom || ''} ${dateTo || ''} --apply`);
+    console.log(`Plan zapisany do ${file}. Zapis: node optimize.js ${providerName} ${dateFrom || ''} ${dateTo || ''} --apply${envFlag ? ` ${envFlag}` : ''}`);
   }
 }
 

@@ -42,6 +42,7 @@ Bez dat skrypt bierze wszystkie dostawy, które da się jeszcze zmienić. Menu j
 - `--show-prompt` wypisuje pełny prompt wysyłany do modelu.
 - `--order=ID` albo `--order=all`, gdy na koncie jest kilka aktywnych zamówień (domyślnie `MACZFIT_ORDER_ID` itd. z `.env`).
 - `--profile=nazwa` wybiera plik z `profiles/`.
+- `--env=plik` bierze konfigurację z innego pliku niż `.env`. Przydatne, gdy z jednego komputera korzysta kilka osób albo jedno konto cateringu ma kilka zamówień (np. `zona.env` z innym `MACZFIT_ORDER_ID` i profilem). Kreator też to przyjmuje: `node setup.js --env=zona.env`. Plany są zapisywane osobno per zamówienie.
 - `--company=<company-id>` i `--host=<panel>` tylko dla providera `dietly`. Listę company-id wspólnego panelu pokazuje `node setup.js`; catering z własnym panelem ma je w `https://<host>/config.js`.
 
 Ustawienie konkretnych dań po nazwie, bez AI:

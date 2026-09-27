@@ -3,7 +3,9 @@
 //   node set.js <provider> fixes.json          (podgląd)
 //   node set.js <provider> fixes.json --apply  (zapis)
 // fixes.json: [{ "date": "2026-09-23", "meal": "Śniadanie", "dish": "fragment nazwy dania" }, ...]
-require('dotenv').config();
+// --env=plik pozwala trzymać kilka konfiguracji (np. dwa zamówienia na jednym koncie), domyślnie .env
+const envFlag = process.argv.find((a) => a.startsWith('--env='));
+require('dotenv').config(envFlag ? { path: envFlag.slice(6) } : {});
 const fs = require('fs');
 const { parseArgs } = require('./lib/cli');
 const { loadProvider } = require('./providers');
