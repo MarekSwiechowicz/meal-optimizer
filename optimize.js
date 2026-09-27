@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 // Użycie: node optimize.js <provider> [dateFrom] [dateTo] [--apply] [--replan] [--show-prompt] [--order=ID|all] [--profile=nazwa]
+//   provider dietly dodatkowo: --company=<company-id> [--host=panel.dietly.pl]
 //   bez --apply: podgląd, wybory AI trafiają do plans/<provider>.json
 //   --apply:     odtwarza plan z pliku dla tego samego zakresu (bez pytania AI), pomija sloty zmienione ręcznie w międzyczasie
 //   --replan:    przy --apply pyta AI od nowa zamiast czytać plan
@@ -95,7 +96,7 @@ async function applyFromPlan(provider, plan, orders) {
 
 async function main() {
   console.log(APPLY ? 'TRYB: zapis zmian (--apply)' : 'TRYB: podgląd (dry-run), dodaj --apply żeby zapisać');
-  const provider = loadProvider(providerName, process.env);
+  const provider = loadProvider(providerName, process.env, flags);
   await provider.login();
   const orders = await pickOrders(provider);
   const planMeta = { orderId: orders.length === 1 ? orders[0].id : 'all', dateFrom: dateFrom || null, dateTo: dateTo || null };
@@ -109,7 +110,7 @@ async function main() {
   const pick = createPicker({
     apiKey: process.env.GROQ_API_KEY,
     model: process.env.GROQ_MODEL,
-    profileName: flags.profile || process.env.PROFILE || 'wzjg',
+    profileName: flags.profile || process.env.PROFILE || 'zdrowo',
     showPrompt: !!flags['show-prompt'],
   });
 
@@ -147,5 +148,5 @@ async function main() {
 
 main().catch((err) => {
   console.error('Błąd:', err.message);
-  process.exit(1);
+  process.exitCode = 1;
 });

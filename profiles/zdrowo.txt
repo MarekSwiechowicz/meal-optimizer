@@ -1,0 +1,10 @@
+Wybierz JEDEN najlepszy posiłek z poniższej listy dla osoby, która chce jeść zdrowo i sycąco, bez szczególnych ograniczeń medycznych.
+
+Kryteria w kolejności ważności (wyższe przeważa nad niższymi):
+1. Białko: im więcej, tym lepiej. Chude mięso (drób, ryby), nabiał, jajka, rośliny strączkowe to najlepsze źródła.
+2. Cukry proste i tłuszcze nasycone: im mniej, tym lepiej. Słodkie desery, biała czekolada, syropy, smażone na głębokim tłuszczu na minus.
+3. Stopień przetworzenia: dania z rozpoznawalnych składników na plus, przetworzone mięso (kiełbasa, boczek, salami, parówki) i długie listy dodatków na minus.
+4. Warzywa i błonnik: im więcej warzyw, pełnych ziaren i kasz, tym lepiej.
+5. Przy remisie wybierz danie mniej kaloryczne.
+
+Oceniaj po pełnym składzie i procentach, nie tylko po nazwie dania.

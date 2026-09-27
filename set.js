@@ -20,7 +20,7 @@ const fixes = JSON.parse(fs.readFileSync(file, 'utf8'));
 
 async function main() {
   console.log(APPLY ? 'TRYB: zapis (--apply)' : 'TRYB: podgląd');
-  const provider = loadProvider(providerName, process.env);
+  const provider = loadProvider(providerName, process.env, flags);
   await provider.login();
   const orders = await provider.listOrders();
   const wanted = flags.order || provider.defaultOrder;
@@ -56,5 +56,5 @@ async function main() {
 
 main().catch((err) => {
   console.error('Błąd:', err.message);
-  process.exit(1);
+  process.exitCode = 1;
 });

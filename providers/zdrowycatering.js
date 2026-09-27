@@ -1,5 +1,5 @@
 // Zdrowy Catering (zamowienie.zdrowycatering.pl, backend api.powerfoods.pl, brand_id 3). JWT Bearer.
-const { createClient } = require('../lib/http');
+const { createClient, loginError } = require('../lib/http');
 const { dish, num, todayPlus } = require('../lib/util');
 
 const BASE = 'https://api.powerfoods.pl/api/v1';
@@ -27,10 +27,13 @@ module.exports = function create(env) {
 
     async login() {
       if (!env.ZDROWY_EMAIL || !env.ZDROWY_PASSWORD) throw new Error('Brak ZDROWY_EMAIL / ZDROWY_PASSWORD w .env');
-      const { body } = await http.request('/clients/login', {
-        method: 'POST',
-        body: JSON.stringify({ email: env.ZDROWY_EMAIL, password: env.ZDROWY_PASSWORD, brand_id: BRAND_ID }),
-      });
+      let body;
+      try {
+        ({ body } = await http.request('/clients/login', {
+          method: 'POST',
+          body: JSON.stringify({ email: env.ZDROWY_EMAIL, password: env.ZDROWY_PASSWORD, brand_id: BRAND_ID }),
+        }));
+      } catch (e) { throw loginError(e, 'zamowienie.zdrowycatering.pl'); }
       if (!body || !body.token) throw new Error('Login bez tokena');
       http.setHeader('authorization', `Bearer ${body.token}`);
     },
