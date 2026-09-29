@@ -63,4 +63,5 @@ node set.js maczfit fixes.json --apply
 - Hasło do cateringu leży jawnym tekstem w `.env` na Twoim dysku. Plik jest w `.gitignore`, nie wrzucaj go nigdzie.
 - Skład i makro dań (bez Twoich danych) lecą do Groq, czyli na serwery w USA.
 - API cateringów są nieoficjalne, odtworzone z paneli klienta. Mogą się zmienić bez zapowiedzi, a regulamin cateringu może nie przewidywać automatów. Używasz na własnym koncie i na własne ryzyko.
+- Licencja MIT, patrz LICENSE.
 - Przed `--apply` zawsze przejrzyj podgląd. Provider `dietly` był sprawdzony na tej samej API co Vikinga, ale nie na koncie z dietly.pl. Jeśli coś nie działa, zgłoś z wynikiem `--show-prompt` i komunikatem błędu.
