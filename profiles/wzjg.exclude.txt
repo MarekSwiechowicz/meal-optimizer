@@ -1,0 +1,29 @@
+# Czego Marek nie je, niezaleznie od makr. Dopasowanie do nazwy dania i skladu, bez polskich znakow.
+# Wzorzec = rdzen slowa, zeby lapac odmiany. Jesli wszystkie opcje w slocie odpadna,
+# optimize.js wraca do pelnej listy i pisze o tym w logu.
+fasolka po breton
+kapust
+kapusn
+bigos
+golabk
+colesla
+grzyb
+pieczark
+boczniak
+borowik
+podgrzybk
+# salatka jako cale danie, wiec tylko po nazwie (dodatek surowki obok nie wycina dania)
+name:salatka
+name:salatki
+
+# Przetworzone mieso: jesli jest w NAZWIE dania, to jest istotnym skladnikiem (punkt 1 profilu).
+# Tylko po nazwie, zeby slad w marynacie dalej oceniala AI, nie regex.
+name:boczk
+name:kielbas
+name:chorizo
+name:salami
+name:kindziuk
+name:pepperoni
+name:parowk
+name:szarpana wieprzowin
+name:szarpanej wieprzowin

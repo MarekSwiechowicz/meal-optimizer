@@ -13,6 +13,7 @@ const { createPicker } = require('./lib/ai');
 const { score } = require('./lib/scoring');
 const { savePlan, loadPlan } = require('./lib/plan');
 const { sleep } = require('./lib/util');
+const { loadExclusions, matchExclusion } = require('./lib/exclude');
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const [providerName, dateFrom, dateTo] = positional;
@@ -41,7 +42,7 @@ async function pickOrders(provider) {
   throw new Error(`Kilka aktywnych zamówień, wybierz --order=ID albo --order=all:\n${orders.map((o) => `  #${o.id} ${o.label}`).join('\n')}`);
 }
 
-async function planDelivery(provider, pick, delivery) {
+async function planDelivery(provider, pick, delivery, exclusions) {
   const slots = await provider.getSlots(delivery);
   if (slots.length && slots.every((s) => s.options.length === 0)) {
     console.log(`  [${delivery.date}] brak opcji zamiany w żadnym posiłku (menu jeszcze nieopublikowane?)`);
@@ -50,10 +51,31 @@ async function planDelivery(provider, pick, delivery) {
   const changes = [];
   for (const slot of slots) {
     if (slot.options.length <= 1) continue;
-    process.stdout.write(`  [${delivery.date}] ${slot.name}: pytam AI (${slot.options.length} opcje)... `);
-    const { idx, reason } = await pick(slot.options.map((o) => o.dish));
-    const best = slot.options[idx];
-    console.log(`-> ${best.dish.name}${reason ? ` (${reason})` : ''}`);
+    // Twarde wykluczenia preferencyjne odpadaja przed pytaniem AI; model potrafil je zignorowac.
+    const dropped = exclusions.length
+      ? slot.options.map((o) => matchExclusion(o.dish, exclusions)).filter(Boolean)
+      : [];
+    let candidates = exclusions.length
+      ? slot.options.filter((o) => !matchExclusion(o.dish, exclusions))
+      : slot.options;
+    if (!candidates.length) {
+      console.log(`  [${delivery.date}] ${slot.name}: wszystkie ${slot.options.length} opcji na liscie wykluczen, pytam AI o najmniej zla`);
+      candidates = slot.options;
+    }
+    const note = dropped.length && candidates.length !== slot.options.length ? `, odrzucone ${dropped.length}: ${[...new Set(dropped)].join('/')}` : '';
+    let best;
+    let reason;
+    if (candidates.length === 1) {
+      best = candidates[0];
+      reason = `jedyna opcja poza wykluczeniami (${[...new Set(dropped)].join('/')})`;
+      console.log(`  [${delivery.date}] ${slot.name}: 1 opcja po filtrach${note} -> ${best.dish.name}`);
+    } else {
+      process.stdout.write(`  [${delivery.date}] ${slot.name}: pytam AI (${candidates.length} opcje${note})... `);
+      const picked = await pick(candidates.map((o) => o.dish));
+      best = candidates[picked.idx];
+      reason = picked.reason;
+      console.log(`-> ${best.dish.name}${reason ? ` (${reason})` : ''}`);
+    }
     if (best.id === slot.currentId) continue;
     changes.push({
       deliveryId: delivery.id,
@@ -109,12 +131,15 @@ async function main() {
     console.log('Brak pasującego planu, pytam AI i zapisuję od razu');
   }
 
+  const profileName = flags.profile || process.env.PROFILE || 'zdrowo';
   const pick = createPicker({
     apiKey: process.env.GROQ_API_KEY,
     model: process.env.GROQ_MODEL,
-    profileName: flags.profile || process.env.PROFILE || 'zdrowo',
+    profileName,
     showPrompt: !!flags['show-prompt'],
   });
+  const exclusions = loadExclusions(profileName);
+  if (exclusions.length) console.log(`Wykluczenia z profiles/${profileName}.exclude.txt: ${exclusions.length} wzorcow`);
 
   let total = 0;
   const planned = [];
@@ -122,7 +147,7 @@ async function main() {
     const deliveries = (await provider.listDeliveries(order)).filter(inRange);
     console.log(`\n=== Zamówienie #${order.id} (${order.label}), dostaw do sprawdzenia: ${deliveries.length}`);
     for (const delivery of deliveries) {
-      const changes = await planDelivery(provider, pick, delivery);
+      const changes = await planDelivery(provider, pick, delivery, exclusions);
       if (!changes.length) continue;
       console.log(`\n${delivery.date}${delivery.note ? ` (${delivery.note})` : ''}:`);
       for (const c of changes) {
