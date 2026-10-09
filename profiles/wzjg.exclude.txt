@@ -27,3 +27,10 @@ name:pepperoni
 name:parowk
 name:szarpana wieprzowin
 name:szarpanej wieprzowin
+
+# Fasola (wzdymajaca). Fasolka szparagowa to straki, nie nasiona, wiec zostaje: linia z "-" to wyjatek.
+-fasolka szparagowa
+-fasolki szparagowej
+-fasolka szparagowa zielona
+-zielona fasolka szparagowa
+fasol
