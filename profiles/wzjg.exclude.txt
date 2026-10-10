@@ -34,3 +34,8 @@ name:szarpanej wieprzowin
 -fasolka szparagowa zielona
 -zielona fasolka szparagowa
 fasol
+
+# Smietana w nazwie dania = jest jej duzo (sos smietanowy, "z kwasna smietana", carbonara).
+# Slad smietany w skladzie zostawiamy AI, zeby nie wycinac polowy menu.
+name:smietan
+name:carbonara
