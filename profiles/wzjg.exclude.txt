@@ -39,3 +39,22 @@ fasol
 # Slad smietany w skladzie zostawiamy AI, zeby nie wycinac polowy menu.
 name:smietan
 name:carbonara
+
+# Pasty rybne i pasztety rybne (zgloszone 2026-10-15). Tylko po nazwie: pasta to cale danie,
+# a slad ryby w skladzie innego dania ocenia AI. Zwykle ryby nie sa wykluczone, sa na minus w punkcie 6.
+name:pasta ryb
+name:pasty ryb
+name:pasta z ryb
+name:pasta z makreli
+name:pasta z wedzonej makreli
+name:pasta z tunczyk
+name:pasta z lososi
+name:pasta z sardyn
+name:pasta z sledzi
+name:pasta z sledziem
+name:pasta sledziow
+name:pasztet ryb
+name:pasztet z ryb
+name:pasztet z makreli
+name:pasztet z tunczyk
+name:pasztet z lososi
