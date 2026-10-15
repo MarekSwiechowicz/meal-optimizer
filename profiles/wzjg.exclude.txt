@@ -58,3 +58,8 @@ name:pasztet z ryb
 name:pasztet z makreli
 name:pasztet z tunczyk
 name:pasztet z lososi
+
+# Zupa tajska i dania w stylu tajskim (zgloszone 2026-10-15). Tylko po nazwie.
+name:tajsk
+name:tom yum
+name:tom kha
