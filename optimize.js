@@ -42,7 +42,7 @@ async function pickOrders(provider) {
   throw new Error(`Kilka aktywnych zamówień, wybierz --order=ID albo --order=all:\n${orders.map((o) => `  #${o.id} ${o.label}`).join('\n')}`);
 }
 
-async function planDelivery(provider, pick, delivery, exclusions) {
+async function planDelivery(provider, pick, delivery, exclusions, keeps) {
   const slots = await provider.getSlots(delivery);
   if (slots.length && slots.every((s) => s.options.length === 0)) {
     console.log(`  [${delivery.date}] brak opcji zamiany w żadnym posiłku (menu jeszcze nieopublikowane?)`);
@@ -63,6 +63,16 @@ async function planDelivery(provider, pick, delivery, exclusions) {
       candidates = slot.options;
     }
     const note = dropped.length && candidates.length !== slot.options.length ? `, odrzucone ${dropped.length}: ${[...new Set(dropped)].join('/')}` : '';
+    // Smak wygrywa z makrami: jesli obecne danie jest na liscie lubianych i przeszlo wykluczenia,
+    // zostawiamy je i nie pytamy AI. Model potrafil zamienic kopytka na "wiecej bialka".
+    const currentOpt = slot.options.find((o) => o.id === slot.currentId);
+    const keepHit = keeps.length && currentOpt && candidates.includes(currentOpt)
+      ? matchExclusion(currentOpt.dish, keeps)
+      : null;
+    if (keepHit) {
+      console.log(`  [${delivery.date}] ${slot.name}: zostawiam "${currentOpt.dish.name}" (lubiane: ${keepHit})`);
+      continue;
+    }
     let best;
     let reason;
     if (candidates.length === 1) {
@@ -71,7 +81,9 @@ async function planDelivery(provider, pick, delivery, exclusions) {
       console.log(`  [${delivery.date}] ${slot.name}: 1 opcja po filtrach${note} -> ${best.dish.name}`);
     } else {
       process.stdout.write(`  [${delivery.date}] ${slot.name}: pytam AI (${candidates.length} opcje${note})... `);
-      const picked = await pick(candidates.map((o) => o.dish));
+      // Obecne danie jest oznaczone w promptcie, zeby profil mogl kazac zostawic je, gdy jest lubiane.
+      const currentIdx = candidates.findIndex((o) => o.id === slot.currentId);
+      const picked = await pick(candidates.map((o) => o.dish), currentIdx);
       best = candidates[picked.idx];
       reason = picked.reason;
       console.log(`-> ${best.dish.name}${reason ? ` (${reason})` : ''}`);
@@ -140,6 +152,8 @@ async function main() {
   });
   const exclusions = loadExclusions(profileName);
   if (exclusions.length) console.log(`Wykluczenia z profiles/${profileName}.exclude.txt: ${exclusions.length} wzorcow`);
+  const keeps = loadExclusions(profileName, 'keep');
+  if (keeps.length) console.log(`Lubiane (nie zamieniamy) z profiles/${profileName}.keep.txt: ${keeps.length} wzorcow`);
 
   let total = 0;
   const planned = [];
@@ -147,7 +161,7 @@ async function main() {
     const deliveries = (await provider.listDeliveries(order)).filter(inRange);
     console.log(`\n=== Zamówienie #${order.id} (${order.label}), dostaw do sprawdzenia: ${deliveries.length}`);
     for (const delivery of deliveries) {
-      const changes = await planDelivery(provider, pick, delivery, exclusions);
+      const changes = await planDelivery(provider, pick, delivery, exclusions, keeps);
       if (!changes.length) continue;
       console.log(`\n${delivery.date}${delivery.note ? ` (${delivery.note})` : ''}:`);
       for (const c of changes) {

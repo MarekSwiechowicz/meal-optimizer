@@ -1,0 +1,39 @@
+# Dania, ktore Marek lubi. Jesli AKTUALNIE wybrane danie pasuje do ktoregos wzorca
+# i nie wpadlo na liste wykluczen, skrypt zostawia je i nie pyta AI o zamiane.
+# Smak wygrywa z makrami (decyzja Marka 2026-10-19): lepsze bialko czy mniej cukru
+# nie sa powodem, zeby zabrac lubiane danie. Skladnia jak w .exclude.txt.
+name:kopytka
+name:kluski
+name:leniwe
+name:knedl
+name:pierog
+name:nalesnik
+name:pancak
+name:placki
+name:placuszk
+name:racuch
+name:omlet
+name:frittat
+name:jajecznic
+name:jajka
+name:jajko
+name:jaja
+name:makaron
+name:spaghetti
+name:lasagne
+name:tagliatelle
+name:penne
+name:twarog
+name:twarozek
+name:serek
+name:gzik
+name:deser
+name:ciasto
+name:ciasteczk
+name:szarlotk
+name:tarta
+name:sernik
+name:owsiank
+name:budyn
+name:ryz na mleku
+name:kasza manna

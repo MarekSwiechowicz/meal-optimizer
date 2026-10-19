@@ -11,6 +11,8 @@ Automatyczny wybór posiłków w cateringach dietetycznych z opcją "wybór menu
 | `zdrowycatering` | Zdrowy Catering (zamowienie.zdrowycatering.pl) | konto z tego panelu |
 | `dietly` | każdy catering na platformie Dietly: Robin Food, Pyszna Fabryka, Chefbox, Dziki Box, Afterfit, Tytka Fit, Twoje Menu, U Hrabiego i około 30 innych | konto z dietly.pl (wspólny panel panel.dietly.pl) albo z własnego panelu cateringu |
 
+Obok profilu mogą leżeć dwie listy wzorców na nazwy i składy dań: `profiles/<profil>.exclude.txt` wycina dania z listy opcji, zanim zapyta się model, a `profiles/<profil>.keep.txt` chroni dania lubiane, czyli gdy aktualnie wybrane danie pasuje do wzorca, skrypt zostawia je bez pytania modelu. Obie listy są opcjonalne i mają tę samą składnię, patrz `profiles/README.md`.
+
 Wybór robi model przez Groq (darmowy klucz z console.groq.com). Kryteria są w zwykłym pliku tekstowym w `profiles/`, domyślnie `zdrowo` (dużo białka, mało cukru i przetworzonego jedzenia). Własny profil, np. dla cukrzycy, refluksu albo redukcji, to nowy plik tekstowy, patrz `profiles/README.md`.
 
 ## Szybki start
