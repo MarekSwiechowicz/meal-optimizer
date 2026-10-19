@@ -63,3 +63,12 @@ name:pasztet z lososi
 name:tajsk
 name:tom yum
 name:tom kha
+
+# Sledz i cebula (zgloszone 2026-10-19, po "sledz z cebulka" na II sniadanie).
+# Sledz w kazdej formie, twardo. Pozostale ryby nadal tylko na minus w punkcie 6.
+name:sledz
+name:sledzi
+name:sledziow
+# Cebula tylko gdy jest w NAZWIE dania: wtedy jest jej duzo i czuc ja w smaku
+# (ta sama logika co smietana). Slad cebuli w skladzie dalej ocenia AI.
+name:cebul
