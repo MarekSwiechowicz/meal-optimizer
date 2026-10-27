@@ -144,9 +144,11 @@ async function main() {
   }
 
   const profileName = flags.profile || process.env.PROFILE || 'zdrowo';
+  const aiProvider = process.env.AI_PROVIDER || 'groq';
   const pick = createPicker({
-    apiKey: process.env.GROQ_API_KEY,
-    model: process.env.GROQ_MODEL,
+    provider: aiProvider,
+    apiKey: aiProvider === 'anthropic' ? process.env.ANTHROPIC_API_KEY : process.env.GROQ_API_KEY,
+    model: aiProvider === 'anthropic' ? process.env.ANTHROPIC_MODEL : process.env.GROQ_MODEL,
     profileName,
     showPrompt: !!flags['show-prompt'],
   });
